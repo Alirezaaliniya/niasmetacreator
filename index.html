@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>WordPress Meta Generator</title>
+</head>
+<body>
+  <label for="nsformname">نام فانکشن</label>
+  <input type="text" id="nsformname" name="nsformname" style="width: 100%;" />
+
+  <label for="nsformmetaname">نام متا</label>
+  <input type="text" id="nsformmetaname" name="nsformmetaname" style="width: 100%;" />
+
+  <label for="nsformboxname">نام متا باکس</label>
+  <input type="text" id="nsformboxname" name="nsformboxname" style="width: 100%;" />
+
+  <label for="nsformcontent">نام ناحیه متا باکس</label>
+  <input type="text" id="nsformcontent" name="nsformcontent" style="width: 100%;" />
+
+  <label for="nsformvalue">نام فیلد</label>
+  <input type="text" id="nsformvalue" name="nsformvalue" style="width: 100%;" />
+
+  <label for="nsformlabelname">نام لیبل</label>
+  <input type="text" id="nsformlabelname" name="nsformlabelname" style="width: 100%;" />
+
+  <button id="nscreatmeta">ساخت متای وردپرس</button>
+
+  <code class="nsmetacode"></code>
+
+  <script>
+    document.getElementById('nscreatmeta').addEventListener('click', function() {
+      var functionName = document.getElementById('nsformname').value;
+      var metaName = document.getElementById('nsformmetaname').value;
+      var metaBoxName = document.getElementById('nsformboxname').value;
+      var metaContent = document.getElementById('nsformcontent').value;
+      var metaValue = document.getElementById('nsformvalue').value;
+      var labelName = document.getElementById('nsformlabelname').value;
+
+      var metaCode = `
+// Add metabox to WooCommerce product page
+function nias_${functionName}() {
+    add_meta_box(
+        'nias_${metaBoxName}',
+        '${metaName}',
+        'nias_${functionName}_content_${metaContent}',
+        'product',
+        'normal',
+        'default'
+    );
+}
+add_action('add_meta_boxes', 'nias_${functionName}');
+
+// Metabox content
+function nias_${functionName}_content_${metaContent}($post) {
+    // Get the current value of the custom field
+    $${metaValue} = get_post_meta($post->ID, '_${metaValue}', true);
+
+    // Output the HTML for the metabox
+    ?>
+    <p>
+        <label for="${metaValue}">${labelName}</label>
+        <input type="text" id="${metaValue}" name="${metaValue}" value="<?php echo esc_attr($${metaValue}); ?>" style="width: 100%;" />
+    </p>
+    <?php
+}
+
+// Save metabox data
+function save_nias_${functionName}($post_id) {
+    // Check if this is a product
+    if ('product' !== get_post_type($post_id)) {
+        return;
+    }
+
+    // Save the custom field value
+    if (isset($_POST['${metaValue}'])) {
+        
+        update_post_meta($post_id, '_${metaValue}', sanitize_text_field($_POST['${metaValue}']));
+        
+    }
+}
+add_action('woocommerce_process_product_meta', 'save_nias_${functionName}');
+`;
+
+      // Display generated meta code under the button
+      document.querySelector('.nsmetacode').innerText = metaCode;
+    });
+  </script>
+</body>
+</html>
