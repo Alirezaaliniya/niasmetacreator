@@ -6,53 +6,82 @@
 <title>WordPress Meta Generator</title>
 </head>
 <body>
-  <label for="nsformname">نام فانکشن</label>
-  <input type="text" id="nsformname" name="nsformname" style="width: 100%;" />
+  <div id="nias_metaFields">
+    <div class="nias_metaField">
+      <label for="nias_formname">نام فانکشن</label>
+      <input type="text" class="nias_formname" name="nias_formname[]" style="width: 100%;" />
 
-  <label for="nsformmetaname">نام متا</label>
-  <input type="text" id="nsformmetaname" name="nsformmetaname" style="width: 100%;" />
+      <label for="nias_formmetaname">نام متا</label>
+      <input type="text" class="nias_formmetaname" name="nias_formmetaname[]" style="width: 100%;" />
 
-  <label for="nsformboxname">نام متا باکس</label>
-  <input type="text" id="nsformboxname" name="nsformboxname" style="width: 100%;" />
+      <label for="nias_formboxname">نام متا باکس</label>
+      <input type="text" class="nias_formboxname" name="nias_formboxname[]" style="width: 100%;" />
 
-  <label for="nsformcontent">نام ناحیه متا باکس</label>
-  <input type="text" id="nsformcontent" name="nsformcontent" style="width: 100%;" />
+      <label for="nias_formcontent">نام ناحیه متا باکس</label>
+      <input type="text" class="nias_formcontent" name="nias_formcontent[]" style="width: 100%;" />
 
-  <label for="nsformvalue">نام فیلد</label>
-  <input type="text" id="nsformvalue" name="nsformvalue" style="width: 100%;" />
+      <div class="nias_metaFieldsRepeat"></div>
+    </div>
+  </div>
+  
+  <button id="nias_addMetaField">افزودن متا فیلد جدید</button>
+  <button id="nias_creatmeta">ساخت متای وردپرس</button>
 
-  <label for="nsformlabelname">نام لیبل</label>
-  <input type="text" id="nsformlabelname" name="nsformlabelname" style="width: 100%;" />
-
-  <button id="nscreatmeta">ساخت متای وردپرس</button>
-
-  <code class="nsmetacode"></code>
+  <code class="nias_metacode"></code>
 
   <script>
-    document.getElementById('nscreatmeta').addEventListener('click', function() {
-      var functionName = document.getElementById('nsformname').value;
-      var metaName = document.getElementById('nsformmetaname').value;
-      var metaBoxName = document.getElementById('nsformboxname').value;
-      var metaContent = document.getElementById('nsformcontent').value;
-      var metaValue = document.getElementById('nsformvalue').value;
-      var labelName = document.getElementById('nsformlabelname').value;
+    document.getElementById('nias_addMetaField').addEventListener('click', function() {
+      var metaFields = document.querySelectorAll('.nias_metaField');
 
-      var metaCode = `
+      metaFields.forEach(function(field) {
+        var metaFieldsRepeat = field.querySelector('.nias_metaFieldsRepeat');
+        var newMetaField = document.createElement('div');
+
+        newMetaField.innerHTML = `
+          <label for="nias_formvalue">نام فیلد</label>
+          <input type="text" class="nias_formvalue" name="nias_formvalue[]" style="width: 100%;" />
+
+          <label for="nias_formlabelname">نام لیبل</label>
+          <input type="text" class="nias_formlabelname" name="nias_formlabelname[]" style="width: 100%;" />
+        `;
+
+        metaFieldsRepeat.appendChild(newMetaField);
+      });
+    });
+
+    document.getElementById('nias_creatmeta').addEventListener('click', function() {
+      var metaFields = document.querySelectorAll('.nias_metaField');
+      var metaCode = '';
+
+      metaFields.forEach(function(field, index) {
+        var functionName = field.querySelector('.nias_formname').value;
+        var metaName = field.querySelector('.nias_formmetaname').value;
+        var metaBoxName = field.querySelector('.nias_formboxname').value;
+        var metaContent = field.querySelector('.nias_formcontent').value;
+
+        var metaValues = field.querySelectorAll('.nias_formvalue');
+        var metaLabelNames = field.querySelectorAll('.nias_formlabelname');
+
+        metaValues.forEach(function(valueField, valueIndex) {
+          var metaValue = valueField.value;
+          var labelName = metaLabelNames[valueIndex].value;
+
+          metaCode += `
 // Add metabox to WooCommerce product page
-function nias_${functionName}() {
+function nias_${functionName}_${index}_${metaValue}() {
     add_meta_box(
-        'nias_${metaBoxName}',
+        'nias_${metaBoxName}_${index}_${metaValue}',
         '${metaName}',
-        'nias_${functionName}_content_${metaContent}',
+        'nias_${functionName}_${index}_${metaContent}_${metaValue}_content',
         'product',
         'normal',
         'default'
     );
 }
-add_action('add_meta_boxes', 'nias_${functionName}');
+add_action('add_meta_boxes', 'nias_${functionName}_${index}_${metaValue}');
 
 // Metabox content
-function nias_${functionName}_content_${metaContent}($post) {
+function nias_${functionName}_${index}_${metaContent}_${metaValue}_content($post) {
     // Get the current value of the custom field
     $${metaValue} = get_post_meta($post->ID, '_${metaValue}', true);
 
@@ -66,7 +95,7 @@ function nias_${functionName}_content_${metaContent}($post) {
 }
 
 // Save metabox data
-function save_nias_${functionName}($post_id) {
+function save_nias_${functionName}_${index}_${metaValue}($post_id) {
     // Check if this is a product
     if ('product' !== get_post_type($post_id)) {
         return;
@@ -74,16 +103,16 @@ function save_nias_${functionName}($post_id) {
 
     // Save the custom field value
     if (isset($_POST['${metaValue}'])) {
-        
         update_post_meta($post_id, '_${metaValue}', sanitize_text_field($_POST['${metaValue}']));
-        
     }
 }
-add_action('woocommerce_process_product_meta', 'save_nias_${functionName}');
+add_action('woocommerce_process_product_meta', 'save_nias_${functionName}_${index}_${metaValue}');
 `;
+        });
+      });
 
       // Display generated meta code under the button
-      document.querySelector('.nsmetacode').innerText = metaCode;
+      document.querySelector('.nias_metacode').innerText = metaCode;
     });
   </script>
 </body>
