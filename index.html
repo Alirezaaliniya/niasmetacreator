@@ -53,11 +53,30 @@
       var metaFields = document.querySelectorAll('.nias_metaField');
       var metaCode = '';
 
+      // Create the meta box only once
       metaFields.forEach(function(field, index) {
         var functionName = field.querySelector('.nias_formname').value;
         var metaName = field.querySelector('.nias_formmetaname').value;
         var metaBoxName = field.querySelector('.nias_formboxname').value;
         var metaContent = field.querySelector('.nias_formcontent').value;
+
+        metaCode += `
+// Add metabox to WooCommerce product page
+function nias_${functionName}() {
+    add_meta_box(
+        'nias_${metaBoxName}',
+        '${metaName}',
+        'nias_${functionName}_content',
+        'product',
+        'normal',
+        'default'
+    );
+}
+add_action('add_meta_boxes', 'nias_${functionName}');
+
+// Metabox content
+function nias_${functionName}_content($post) {
+`;
 
         var metaValues = field.querySelectorAll('.nias_formvalue');
         var metaLabelNames = field.querySelectorAll('.nias_formlabelname');
@@ -67,21 +86,6 @@
           var labelName = metaLabelNames[valueIndex].value;
 
           metaCode += `
-// Add metabox to WooCommerce product page
-function nias_${functionName}_${index}_${metaValue}() {
-    add_meta_box(
-        'nias_${metaBoxName}_${index}_${metaValue}',
-        '${metaName}',
-        'nias_${functionName}_${index}_${metaContent}_${metaValue}_content',
-        'product',
-        'normal',
-        'default'
-    );
-}
-add_action('add_meta_boxes', 'nias_${functionName}_${index}_${metaValue}');
-
-// Metabox content
-function nias_${functionName}_${index}_${metaContent}_${metaValue}_content($post) {
     // Get the current value of the custom field
     $${metaValue} = get_post_meta($post->ID, '_${metaValue}', true);
 
@@ -92,23 +96,35 @@ function nias_${functionName}_${index}_${metaContent}_${metaValue}_content($post
         <input type="text" id="${metaValue}" name="${metaValue}" value="<?php echo esc_attr($${metaValue}); ?>" style="width: 100%;" />
     </p>
     <?php
+`;
+        });
+
+        metaCode += `
 }
 
 // Save metabox data
-function save_nias_${functionName}_${index}_${metaValue}($post_id) {
+function save_nias_${functionName}($post_id) {
     // Check if this is a product
     if ('product' !== get_post_type($post_id)) {
         return;
     }
+`;
 
+        metaValues.forEach(function(valueField) {
+          var metaValue = valueField.value;
+
+          metaCode += `
     // Save the custom field value
     if (isset($_POST['${metaValue}'])) {
         update_post_meta($post_id, '_${metaValue}', sanitize_text_field($_POST['${metaValue}']));
     }
-}
-add_action('woocommerce_process_product_meta', 'save_nias_${functionName}_${index}_${metaValue}');
 `;
         });
+
+        metaCode += `
+}
+add_action('woocommerce_process_product_meta', 'save_nias_${functionName}');
+`;
       });
 
       // Display generated meta code under the button
