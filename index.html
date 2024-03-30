@@ -4,23 +4,63 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>WordPress Meta Generator</title>
+  <style>
+  .nscontentmeta{
+    display: none;
+  }
+  .nscontentmeta.active{
+    display: block;
+  }
+  .tooltip {
+    position: relative;
+    display: inline-block;
+  }
+  
+  .tooltip .tooltiptext {
+    visibility: hidden;
+    width: 140px;
+    background-color: #555;
+    color: #fff;
+    text-align: center;
+    border-radius: 6px;
+    padding: 5px;
+    position: absolute;
+    z-index: 1;
+    bottom: 150%;
+    left: 50%;
+    margin-left: -75px;
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+  
+  .tooltip .tooltiptext::after {
+    content: "";
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    margin-left: -5px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: #555 transparent transparent transparent;
+  }
+  
+  .tooltip:hover .tooltiptext {
+    visibility: visible;
+    opacity: 1;
+  }
+  </style>
 </head>
 <body>
   <div id="nias_metaFields">
     <div class="nias_metaField">
       <label for="nias_formname">نام فانکشن</label>
-      <input type="text" class="nias_formname" name="nias_formname[]" style="width: 100%;" />
+      <input type="text" class="nias_formname" name="nias_formname[]" style="width: 100%;"  placeholder="با حروف انگلیسی و بدون فاصله"/>
 
-      <label for="nias_formmetaname">نام متا</label>
-      <input type="text" class="nias_formmetaname" name="nias_formmetaname[]" style="width: 100%;" />
+      <label for="nias_formmetaname">آیدی متا</label>
+      <input type="text" class="nias_formmetaname" name="nias_formmetaname[]" style="width: 100%;" placeholder="با حروف انگلیسی و بدون فاصله"/>
 
       <label for="nias_formboxname">نام متا باکس</label>
-      <input type="text" class="nias_formboxname" name="nias_formboxname[]" style="width: 100%;" />
-
-      <!-- Removed the nias_formcontent field -->
-      <!--<label for="nias_formcontent">نام ناحیه متا باکس</label>
-      <input type="text" class="nias_formcontent" name="nias_formcontent[]" style="width: 100%;" />-->
-
+      <input type="text" class="nias_formboxname" name="nias_formboxname[]" style="width: 100%;"  placeholder="میتوانید به فارسی وارد کنید"/>
       <div class="nias_metaFieldsRepeat"></div>
     </div>
   </div>
@@ -28,7 +68,14 @@
   <button id="nias_addMetaField">افزودن متا فیلد جدید</button>
   <button id="nias_creatmeta">ساخت متای وردپرس</button>
 
-  <code class="nias_metacode"></code>
+  <div class="nscontentmeta">
+  <textarea class="nias_metacode"></textarea>
+  <div class="tooltip">
+  <button onclick="nscopy()" onmouseout="nstooltip()">
+    <span class="tooltiptext" id="nsbutnontool">کپی کردن</span>
+    کپی کردن</button>
+  </div>
+</div>
 
   <script>
     document.getElementById('nias_addMetaField').addEventListener('click', function() {
@@ -40,17 +87,21 @@
 
         newMetaField.innerHTML = `
           <label for="nias_formvalue">نام فیلد</label>
-          <input type="text" class="nias_formvalue" name="nias_formvalue[]" style="width: 100%;" />
+          <input type="text" class="nias_formvalue" name="nias_formvalue[]" style="width: 100%;" placeholder="با حروف انگلیسی و بدون فاصله" />
 
           <label for="nias_formlabelname">نام لیبل</label>
-          <input type="text" class="nias_formlabelname" name="nias_formlabelname[]" style="width: 100%;" />
+          <input type="text" class="nias_formlabelname" name="nias_formlabelname[]" style="width: 100%;" placeholder="میتوانید به فارسی وارد کنید"/>
         `;
 
         metaFieldsRepeat.appendChild(newMetaField);
       });
     });
 
-    document.getElementById('nias_creatmeta').addEventListener('click', function() {
+    const nscreatmeta = document.getElementById('nias_creatmeta');
+    const nscontentmeta = document.querySelector('.nscontentmeta');
+
+    nscreatmeta.onclick = () =>{    
+      nscontentmeta.classList.add('active');
       var metaFields = document.querySelectorAll('.nias_metaField');
       var metaCode = '';
 
@@ -128,7 +179,24 @@ add_action('woocommerce_process_product_meta', 'save_nias_${functionName}_${inde
 
       // Display generated meta code under the button
       document.querySelector('.nias_metacode').innerText = metaCode;
-    });
+    };
+    function nscopy() {
+  // Get the text field
+  var copyText = document.querySelector('.nias_metacode');
+
+  copyText.select();
+  copyText.setSelectionRange(0, 99999);
+  navigator.clipboard.writeText(copyText.value);
+  
+  var tooltip = document.getElementById("nsbutnontool");
+  tooltip.innerHTML = "کپی شد";
+}
+
+function nstooltip() {
+  var tooltip = document.getElementById("nsbutnontool");
+  tooltip.innerHTML = "کپی کردن";
+}
+
   </script>
 </body>
 </html>
