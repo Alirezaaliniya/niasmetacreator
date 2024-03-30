@@ -1,53 +1,79 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>WordPress Meta Generator</title>
+
   <style>
+  
+.nias_metaField input {
+    border: none;
+    background-color: aliceblue;
+    padding: 10px;
+    border-radius: 17px;
+    outline: none!important;
+}
+
+button#nias_addMetaField {
+    background-color: #2f5ccd29;
+    color: #2f5ccd;
+    border: none;
+    padding: 10px 20px;
+    margin-top: 20px;
+    border-radius: 43px;
+}
+
+button#nias_creatmeta {
+    background-color: #2f5ccd;
+    color: #ffffff;
+    border: none;
+    padding: 10px 20px;
+    margin-top: 20px;
+    border-radius: 43px;
+}
+
+.nscontentmeta {
+    overflow-wrap: break-word !important;
+    overflow-x: scroll;
+    background-color: #292929;
+    padding: 15px;
+    border-radius: 15px;
+    direction: ltr;
+}
+
+code.nias_metacode {
+    text-wrap: wrap;
+    color: white;
+    font-family: sans-serif;
+
+}
+
+.nias_metaField{
+        display: flex;
+    flex-direction: column;
+}
+.nias_metaFieldsRepeat{
+    order: 99999999;
+}
+
+.ptext p{
+    margin: 0!important;
+}
   .nscontentmeta{
     display: none;
+  position: relative;
   }
   .nscontentmeta.active{
     display: block;
   }
-  .tooltip {
-    position: relative;
-    display: inline-block;
-  }
-  
-  .tooltip .tooltiptext {
-    visibility: hidden;
-    width: 140px;
-    background-color: #555;
-    color: #fff;
+ .tooltip {
+    position: absolute;
+    top: 10px;}
+
+.tooltip button {
+    background-color: #2f5ccd;
+    color: white;
+    border-radius: 50px;
+    border: none;
     text-align: center;
-    border-radius: 6px;
-    padding: 5px;
-    position: absolute;
-    z-index: 1;
-    bottom: 150%;
-    left: 50%;
-    margin-left: -75px;
-    opacity: 0;
-    transition: opacity 0.3s;
-  }
+    width: 90px;
+}
   
-  .tooltip .tooltiptext::after {
-    content: "";
-    position: absolute;
-    top: 100%;
-    left: 50%;
-    margin-left: -5px;
-    border-width: 5px;
-    border-style: solid;
-    border-color: #555 transparent transparent transparent;
-  }
-  
-  .tooltip:hover .tooltiptext {
-    visibility: visible;
-    opacity: 1;
-  }
   </style>
 </head>
 <body>
@@ -62,20 +88,24 @@
       <label for="nias_formboxname">نام متا باکس</label>
       <input type="text" class="nias_formboxname" name="nias_formboxname[]" style="width: 100%;"  placeholder="میتوانید به فارسی وارد کنید"/>
       <div class="nias_metaFieldsRepeat"></div>
+      
+      <label for="nias_formvalue">نام فیلد</label>
+      <input type="text" class="nias_formvalue" name="nias_formvalue[]" style="width: 100%;" placeholder="با حروف انگلیسی و بدون فاصله" />
+
+     <label for="nias_formlabelname">نام لیبل</label>
+     <input type="text" class="nias_formlabelname" name="nias_formlabelname[]" style="width: 100%;" placeholder="میتوانید به فارسی وارد کنید"/>
+       
+      
     </div>
   </div>
   
   <button id="nias_addMetaField">افزودن متا فیلد جدید</button>
   <button id="nias_creatmeta">ساخت متای وردپرس</button>
 
-  <div class="nscontentmeta">
-  <textarea class="nias_metacode"></textarea>
-  <div class="tooltip">
-  <button onclick="nscopy()" onmouseout="nstooltip()">
-    <span class="tooltiptext" id="nsbutnontool">کپی کردن</span>
-    کپی کردن</button>
-  </div>
-</div>
+  <pre class="nscontentmeta">
+      <code class="nias_metacode"></code>  
+  </pre>
+
 
   <script>
     document.getElementById('nias_addMetaField').addEventListener('click', function() {
@@ -111,7 +141,6 @@
         var metaBoxName = field.querySelector('.nias_formboxname').value;
 
         metaCode += `
-// Add metabox to WooCommerce product page
 function nias_${functionName}_${index}() {
     add_meta_box(
         'nias_${metaBoxName}_${index}',
@@ -124,7 +153,6 @@ function nias_${functionName}_${index}() {
 }
 add_action('add_meta_boxes', 'nias_${functionName}_${index}');
 
-// Metabox content
 function nias_${functionName}_${index}_content($post) {
 `;
 
@@ -136,10 +164,8 @@ function nias_${functionName}_${index}_content($post) {
           var labelName = metaLabelNames[valueIndex].value;
 
           metaCode += `
-    // Get the current value of the custom field
     $${metaValue} = get_post_meta($post->ID, '_${metaValue}', true);
 
-    // Output the HTML for the metabox
     ?>
     <p>
         <label for="${metaValue}">${labelName}</label>
@@ -152,9 +178,7 @@ function nias_${functionName}_${index}_content($post) {
         metaCode += `
 }
 
-// Save metabox data
 function save_nias_${functionName}_${index}($post_id) {
-    // Check if this is a product
     if ('product' !== get_post_type($post_id)) {
         return;
     }
@@ -164,7 +188,6 @@ function save_nias_${functionName}_${index}($post_id) {
           var metaValue = valueField.value;
 
           metaCode += `
-    // Save the custom field value
     if (isset($_POST['${metaValue}'])) {
         update_post_meta($post_id, '_${metaValue}', sanitize_text_field($_POST['${metaValue}']));
     }
@@ -180,23 +203,7 @@ add_action('woocommerce_process_product_meta', 'save_nias_${functionName}_${inde
       // Display generated meta code under the button
       document.querySelector('.nias_metacode').innerText = metaCode;
     };
-    function nscopy() {
-  // Get the text field
-  var copyText = document.querySelector('.nias_metacode');
-
-  copyText.select();
-  copyText.setSelectionRange(0, 99999);
-  navigator.clipboard.writeText(copyText.value);
-  
-  var tooltip = document.getElementById("nsbutnontool");
-  tooltip.innerHTML = "کپی شد";
-}
-
-function nstooltip() {
-  var tooltip = document.getElementById("nsbutnontool");
-  tooltip.innerHTML = "کپی کردن";
-}
+    
 
   </script>
-</body>
-</html>
+ 
