@@ -164,7 +164,7 @@ function nias_${functionName}_${index}_content($post) {
           var labelName = metaLabelNames[valueIndex].value;
 
           metaCode += `
-    $${metaValue} = get_post_meta($post->ID, '_${metaValue}', true);
+    $${metaValue} = get_post_meta($post->ID, '${metaValue}', true);
 
     ?>
     <p>
@@ -189,7 +189,7 @@ function save_nias_${functionName}_${index}($post_id) {
 
           metaCode += `
     if (isset($_POST['${metaValue}'])) {
-        update_post_meta($post_id, '_${metaValue}', sanitize_text_field($_POST['${metaValue}']));
+        update_post_meta($post_id, '${metaValue}', sanitize_text_field($_POST['${metaValue}']));
     }
 `;
         });
