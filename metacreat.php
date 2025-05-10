@@ -3,6 +3,122 @@ add_shortcode('nias_metabox_form', 'nias_metabox_form_shortcode');
 function nias_metabox_form_shortcode() {
     ob_start();
     ?>
+    <style>
+        #nias-metabox-form {
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+            background: #fff;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            border-radius: 8px;
+        }
+
+        #nias-metabox-form input[type="text"],
+        #nias-metabox-form select {
+            width: 100%;
+            padding: 8px 12px;
+            margin: 5px 0;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+            font-size: 14px;
+        }
+
+        #nias-metabox-form input[type="text"]:focus,
+        #nias-metabox-form select:focus {
+            outline: none;
+            border-color: #2271b1;
+            box-shadow: 0 0 2px rgba(34,113,177,0.2);
+        }
+
+        #nias-metabox-form label {
+            display: block;
+            margin: 10px 0 5px;
+            font-weight: 500;
+            color: #1d2327;
+        }
+
+        .nias-tab-button {
+            padding: 8px 16px;
+            margin-right: 8px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            background: #f0f0f1;
+            transition: all 0.3s ease;
+        }
+
+        .nias-tab-button:hover {
+            background: #2271b1;
+            color: #fff;
+        }
+
+        .nias-tab-button.active {
+            background: #2271b1;
+            color: #fff;
+        }
+
+        .nias-field-block,
+        .nias-checkbox-field-block {
+            background: #f8f9fa;
+            border: 1px solid #e2e4e7;
+            border-radius: 6px;
+            padding: 15px;
+            margin-bottom: 15px;
+            position: relative;
+        }
+
+        button[type="button"] {
+            background: #2271b1;
+            color: #fff;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        button[type="button"]:hover {
+            background: #135e96;
+        }
+
+        button[onclick*="remove"] {
+            background: #dc3232;
+            color: #fff;
+            border: none;
+            padding: 4px 8px;
+            border-radius: 3px;
+            cursor: pointer;
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            font-size: 12px;
+        }
+
+        button[onclick*="remove"]:hover {
+            background: #b32d2e;
+        }
+
+        hr {
+            margin: 20px 0;
+            border: none;
+            border-top: 1px solid #ddd;
+        }
+
+        #nias-code-output {
+            margin-top: 30px;
+            border-radius: 6px;
+            overflow: hidden;
+        }
+
+        #nias-code-output pre {
+            margin: 0;
+            padding: 15px;
+            background: #f8f9fa;
+            border: 1px solid #e2e4e7;
+            border-radius: 6px;
+        }
+    </style>
     <div id="nias-metabox-form">
 
         <!-- تب‌بندی -->
