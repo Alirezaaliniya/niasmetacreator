@@ -1,15 +1,16 @@
 <?php
 add_shortcode('nias_metabox_form', 'nias_metabox_form_shortcode');
-function nias_metabox_form_shortcode() {
+function nias_metabox_form_shortcode()
+{
     ob_start();
-    ?>
+?>
     <style>
         #nias-metabox-form {
             max-width: 800px;
             margin: 20px auto;
             padding: 20px;
             background: #fff;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
             border-radius: 8px;
         }
 
@@ -28,7 +29,7 @@ function nias_metabox_form_shortcode() {
         #nias-metabox-form select:focus {
             outline: none;
             border-color: #2271b1;
-            box-shadow: 0 0 2px rgba(34,113,177,0.2);
+            box-shadow: 0 0 2px rgba(34, 113, 177, 0.2);
         }
 
         #nias-metabox-form label {
@@ -111,12 +112,12 @@ function nias_metabox_form_shortcode() {
             background: #dc3232;
             color: #fff;
             border: none;
-            padding: 4px 8px;
-            border-radius: 3px;
+            padding: 4px 4px;
+            border-radius: 10px;
             cursor: pointer;
             position: absolute;
             top: 10px;
-            right: 10px;
+            left: 10px;
             font-size: 12px;
         }
 
@@ -134,6 +135,11 @@ function nias_metabox_form_shortcode() {
             margin-top: 30px;
             border-radius: 6px;
             overflow: hidden;
+            display: none;
+        }
+
+        #nias-code-output.active {
+            display: block;
         }
 
         #nias-code-output pre {
@@ -143,13 +149,40 @@ function nias_metabox_form_shortcode() {
             border: 1px solid #e2e4e7;
             border-radius: 6px;
         }
+
+        #nias-metabox-form button {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            gap: 10px;
+            font-family: initial;
+        }
+
+        .nias-metabox-main {
+            display: inline-flex;
+        }
+
+        button.active svg path {
+            stroke: white;
+        }
     </style>
     <div id="nias-metabox-form">
 
         <!-- تب‌بندی -->
-        <div style="margin-bottom: 15px;">
-            <button onclick="niasShowTab('text')" class="nias-tab-button active" id="nias-tab-button-text">📝 فیلد متنی</button>
-            <button onclick="niasShowTab('checkbox')" class="nias-tab-button" id="nias-tab-button-checkbox">✅ چک‌باکس</button>
+        <div class="nias-metabox-main" style="margin-bottom: 15px;">
+            <button onclick="niasShowTab('text')" class="nias-tab-button active" id="nias-tab-button-text"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M22 10V15C22 20 20 22 15 22H9C4 22 2 20 2 15V9C2 4 4 2 9 2H14" stroke="#007aff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+                    <path d="M22 10H18C15 10 14 9 14 6V2L22 10Z" stroke="#007aff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+                    <path d="M7 13H13" stroke="#007aff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+                    <path d="M7 17H11" stroke="#007aff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+                </svg>
+                <span>فیلد متنی</span></button>
+            <button onclick="niasShowTab('checkbox')" class="nias-tab-button" id="nias-tab-button-checkbox"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M9 22H15C20 22 22 20 22 15V9C22 4 20 2 15 2H9C4 2 2 4 2 9V15C2 20 4 22 9 22Z" stroke="#007aff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+                    <path d="M7.75 12L10.58 14.83L16.25 9.17004" stroke="#007aff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+                </svg>
+                <span>چک‌باکس</span></button>
         </div>
 
         <!-- Add tabs container -->
@@ -181,11 +214,21 @@ function nias_metabox_form_shortcode() {
                 <div id="nias-fields-repeater">
                     <!-- ریپیتر بلاک‌ها اینجا اضافه میشن -->
                 </div>
-                <button type="button" onclick="niasAddFieldBlock('text')">➕ افزودن فیلد متنی</button><br><br>
+                <button type="button" onclick="niasAddFieldBlock('text')"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M6 12H18" stroke="#fff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+                        <path d="M12 18V6" stroke="#fff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+                    </svg>
+                    افزودن فیلد متنی</button><br><br>
 
-                <button type="button" onclick="niasGenerateCode('text')">🎯 تولید کد</button>
+                <button type="button" onclick="niasGenerateCode('text')"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M8 10L6 12L8 14" stroke="#fff" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round" />
+                        <path d="M16 10L18 12L16 14" stroke="#fff" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round" />
+                        <path d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z" stroke="#fff" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round" />
+                        <path d="M13 9.66992L11 14.33" stroke="#fff" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round" />
+                    </svg>
+                    تولید کد</button>
             </div>
-            
+
             <!-- تب چک‌باکس -->
             <div id="nias-tab-checkbox" class="nias-tab">
                 <label>نام فانکشن:</label><br>
@@ -213,13 +256,29 @@ function nias_metabox_form_shortcode() {
                 <div id="nias-checkbox-fields-repeater">
                     <!-- ریپیتر بلاک‌های چک‌باکس اینجا اضافه میشن -->
                 </div>
-                <button type="button" onclick="niasAddFieldBlock('checkbox')">➕ افزودن چک‌باکس</button><br><br>
+                <button type="button" onclick="niasAddFieldBlock('checkbox')"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M6 12H18" stroke="#fff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+                        <path d="M12 18V6" stroke="#fff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+                    </svg>
+                    افزودن چک‌باکس</button><br><br>
 
-                <button type="button" onclick="niasGenerateCode('checkbox')">🎯 تولید کد</button>
+                <button type="button" onclick="niasGenerateCode('checkbox')"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M8 10L6 12L8 14" stroke="#fff" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round" />
+                        <path d="M16 10L18 12L16 14" stroke="#fff" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round" />
+                        <path d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z" stroke="#fff" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round" />
+                        <path d="M13 9.66992L11 14.33" stroke="#fff" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round" />
+                    </svg> تولید کد</button>
             </div>
 
             <!-- نمایش خروجی با PrismJS -->
-            <div id="nias-code-output" style="margin-top: 20px;">
+            <div id="nias-code-output" class="nias-code-output" style="margin-top: 20px; position: relative;">
+                <button onclick="niasCopyCode()" class="nias-copy-btn" style="position: absolute; top: 10px; right: 10px; background: #2271b1; color: white; border: none; border-radius: 4px; padding: 5px 10px; cursor: pointer; display: flex; align-items: center; gap: 5px;">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M16 12.9V17.1C16 20.6 14.6 22 11.1 22H6.9C3.4 22 2 20.6 2 17.1V12.9C2 9.4 3.4 8 6.9 8H11.1C14.6 8 16 9.4 16 12.9Z" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+                        <path d="M22 6.9V11.1C22 14.6 20.6 16 17.1 16H16V12.9C16 9.4 14.6 8 11.1 8H8V6.9C8 3.4 9.4 2 12.9 2H17.1C20.6 2 22 3.4 22 6.9Z" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+                    </svg>
+                    کپی کد
+                </button>
                 <pre><code class="language-php" id="nias-generated-code"></code></pre>
             </div>
         </div>
@@ -231,46 +290,78 @@ function nias_metabox_form_shortcode() {
 
         <!-- اسکریپت‌های اینلاین -->
         <script>
-        // سوییچ تب‌ها
-        function niasShowTab(tab) {
-            // مخفی کردن همه تب‌ها و حذف کلاس active
-            document.querySelectorAll('.nias-tab').forEach(el => el.classList.remove('active'));
-            document.querySelectorAll('.nias-tab-button').forEach(btn => btn.classList.remove('active'));
-            
-            // فعال کردن تب انتخاب شده
-            document.getElementById('nias-tab-' + tab).classList.add('active');
-            document.getElementById('nias-tab-button-' + tab).classList.add('active');
-        }
+            // Add copy functionality
+            function niasCopyCode() {
+                const codeElement = document.getElementById('nias-generated-code');
+                const copyBtn = document.querySelector('.nias-copy-btn');
 
-        // نمایش فیلد پست تایپ اختصاصی برای تب متن
-        function niasTogglePostTypeField(select) {
-            document.getElementById('nias_custom_post_type_field').style.display = (select.value === 'custom') ? 'block' : 'none';
-        }
-        
-        // نمایش فیلد پست تایپ اختصاصی برای تب چک‌باکس
-        function niasToggleCheckboxPostTypeField(select) {
-            document.getElementById('nias_custom_post_type_field_checkbox').style.display = (select.value === 'custom') ? 'block' : 'none';
-        }
+                // Create a temporary textarea to copy the text
+                const textarea = document.createElement('textarea');
+                textarea.value = codeElement.textContent;
+                document.body.appendChild(textarea);
+                textarea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textarea);
 
-        // شمارنده برای بلاک‌ها
-        let niasFieldIndex = 0;
-        let niasCheckboxFieldIndex = 0;
+                // Show feedback
+                const originalText = copyBtn.innerHTML;
+                copyBtn.innerHTML = `
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M12 22C17.5 22 22 17.5 22 12C22 6.5 17.5 2 12 2C6.5 2 2 6.5 2 12C2 17.5 6.5 22 12 22Z" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                        <path d="M7.75 12L10.58 14.83L16.25 9.17004" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                    کپی شد!`;
 
-        // افزودن بلاک جدید از فیلدها
-        function niasAddFieldBlock(type) {
-            const wrapper = type === 'checkbox' 
-                ? document.getElementById('nias-checkbox-fields-repeater')
-                : document.getElementById('nias-fields-repeater');
-                
-            const index = type === 'checkbox' ? niasCheckboxFieldIndex++ : niasFieldIndex++;
+                setTimeout(() => {
+                    copyBtn.innerHTML = originalText;
+                }, 2000);
+            }
 
-            const block = document.createElement('div');
-            block.className = type === 'checkbox' ? 'nias-checkbox-field-block' : 'nias-field-block';
-            block.style = "border:1px solid #ccc; padding:10px; margin-bottom:10px; position:relative;";
-            
-            if (type === 'checkbox') {
-                block.innerHTML = `
-                    <button onclick="this.parentElement.remove()" style="position:absolute;top:5px;right:5px;">❌</button>
+            // سوییچ تب‌ها
+            function niasShowTab(tab) {
+                // مخفی کردن همه تب‌ها و حذف کلاس active
+                document.querySelectorAll('.nias-tab').forEach(el => el.classList.remove('active'));
+                document.querySelectorAll('.nias-tab-button').forEach(btn => btn.classList.remove('active'));
+
+                // فعال کردن تب انتخاب شده
+                document.getElementById('nias-tab-' + tab).classList.add('active');
+                document.getElementById('nias-tab-button-' + tab).classList.add('active');
+            }
+
+            // نمایش فیلد پست تایپ اختصاصی برای تب متن
+            function niasTogglePostTypeField(select) {
+                document.getElementById('nias_custom_post_type_field').style.display = (select.value === 'custom') ? 'block' : 'none';
+            }
+
+            // نمایش فیلد پست تایپ اختصاصی برای تب چک‌باکس
+            function niasToggleCheckboxPostTypeField(select) {
+                document.getElementById('nias_custom_post_type_field_checkbox').style.display = (select.value === 'custom') ? 'block' : 'none';
+            }
+
+            // شمارنده برای بلاک‌ها
+            let niasFieldIndex = 0;
+            let niasCheckboxFieldIndex = 0;
+
+            // افزودن بلاک جدید از فیلدها
+            function niasAddFieldBlock(type) {
+                const wrapper = type === 'checkbox' ?
+                    document.getElementById('nias-checkbox-fields-repeater') :
+                    document.getElementById('nias-fields-repeater');
+
+                const index = type === 'checkbox' ? niasCheckboxFieldIndex++ : niasFieldIndex++;
+
+                const block = document.createElement('div');
+                block.className = type === 'checkbox' ? 'nias-checkbox-field-block' : 'nias-field-block';
+                block.style = "border:1px solid #ccc; padding:10px; margin-bottom:10px; position:relative;";
+
+                if (type === 'checkbox') {
+                    block.innerHTML = `
+                    <button onclick="this.parentElement.remove()" style="position:absolute;top:5px;left:5px;"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M9.16998 14.83L14.83 9.17004" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M14.83 14.83L9.16998 9.17004" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M9 22H15C20 22 22 20 22 15V9C22 4 20 2 15 2H9C4 2 2 4 2 9V15C2 20 4 22 9 22Z" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>
+</button>
                     <label>آیدی چک‌باکس:</label><br>
                     <input type="text" class="nias_checkbox_id"><br><br>
                     <label>متن چک‌باکس:</label><br>
@@ -281,97 +372,103 @@ function nias_metabox_form_shortcode() {
                         <option value="on">فعال</option>
                     </select><br><br>
                 `;
-            } else {
-                block.innerHTML = `
-                    <button onclick="this.parentElement.remove()" style="position:absolute;top:5px;right:5px;">❌</button>
+                } else {
+                    block.innerHTML = `
+                    <button onclick="this.parentElement.remove()" style="position:absolute;top:5px;left:5px;"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M9.16998 14.83L14.83 9.17004" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M14.83 14.83L9.16998 9.17004" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M9 22H15C20 22 22 20 22 15V9C22 4 20 2 15 2H9C4 2 2 4 2 9V15C2 20 4 22 9 22Z" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>
+</button>
                     <label>آیدی فیلد:</label><br>
                     <input type="text" class="nias_field_id"><br><br>
                     <label>نام لیبل:</label><br>
                     <input type="text" class="nias_field_label"><br><br>
                 `;
-            }
-            
-            wrapper.appendChild(block);
-        }
+                }
 
-        // ساخت کد PHP و نمایش با PrismJS
-        function niasGenerateCode(type) {
-            let functionName, metaboxTitle, metaboxId, postTypeTarget, customPostType, blocks;
-            
-            if (type === 'checkbox') {
-                functionName = document.getElementById('nias_function_name_checkbox').value.trim();
-                metaboxTitle = document.getElementById('nias_metabox_title_checkbox').value.trim();
-                metaboxId = document.getElementById('nias_metabox_id_checkbox').value.trim();
-                postTypeTarget = document.getElementById('nias_post_type_target_checkbox').value;
-                customPostType = document.getElementById('nias_custom_post_type_checkbox').value.trim();
-                blocks = document.querySelectorAll('.nias-checkbox-field-block');
-            } else {
-                functionName = document.getElementById('nias_function_name_text').value.trim();
-                metaboxTitle = document.getElementById('nias_metabox_title_text').value.trim();
-                metaboxId = document.getElementById('nias_metabox_id_text').value.trim();
-                postTypeTarget = document.getElementById('nias_post_type_target_text').value;
-                customPostType = document.getElementById('nias_custom_post_type_text').value.trim();
-                blocks = document.querySelectorAll('.nias-field-block');
+                wrapper.appendChild(block);
             }
 
-            if (!functionName || !metaboxTitle || !metaboxId) {
-                alert("لطفاً تمام فیلدهای اصلی را پر کنید.");
-                return;
-            }
+            // ساخت کد PHP و نمایش با PrismJS
+            function niasGenerateCode(type) {
 
-            let postType = (postTypeTarget === 'custom') ? customPostType : postTypeTarget;
+                let functionName, metaboxTitle, metaboxId, postTypeTarget, customPostType, blocks;
 
-            if (blocks.length === 0) {
-                alert("حداقل یک فیلد اضافه کنید.");
-                return;
-            }
+                if (type === 'checkbox') {
+                    functionName = document.getElementById('nias_function_name_checkbox').value.trim();
+                    metaboxTitle = document.getElementById('nias_metabox_title_checkbox').value.trim();
+                    metaboxId = document.getElementById('nias_metabox_id_checkbox').value.trim();
+                    postTypeTarget = document.getElementById('nias_post_type_target_checkbox').value;
+                    customPostType = document.getElementById('nias_custom_post_type_checkbox').value.trim();
+                    blocks = document.querySelectorAll('.nias-checkbox-field-block');
+                } else {
+                    functionName = document.getElementById('nias_function_name_text').value.trim();
+                    metaboxTitle = document.getElementById('nias_metabox_title_text').value.trim();
+                    metaboxId = document.getElementById('nias_metabox_id_text').value.trim();
+                    postTypeTarget = document.getElementById('nias_post_type_target_text').value;
+                    customPostType = document.getElementById('nias_custom_post_type_text').value.trim();
+                    blocks = document.querySelectorAll('.nias-field-block');
+                }
 
-            // ساخت یک متاباکس واحد با چندین فیلد
-            let fieldsCode = `    add_meta_box('${metaboxId}', '${metaboxTitle}', function($post){\n`;
-            
-            if (type === 'checkbox') {
-                // ساخت کد برای چک‌باکس‌ها
-                fieldsCode += `        echo '<div class="nias-metabox-wrapper">';\n`;
-                blocks.forEach((block, i) => {
-                    const fieldId = block.querySelector('.nias_checkbox_id').value.trim();
-                    const label = block.querySelector('.nias_checkbox_label').value.trim();
-                    const defaultValue = block.querySelector('.nias_checkbox_default').value;
+                if (!functionName || !metaboxTitle || !metaboxId) {
+                    alert("لطفاً تمام فیلدهای اصلی را پر کنید.");
+                    return;
+                }
 
-                    if (!fieldId || !label) {
-                        alert(`چک‌باکس شماره ${i+1} ناقص است.`);
-                        return;
-                    }
+                let postType = (postTypeTarget === 'custom') ? customPostType : postTypeTarget;
 
-                    fieldsCode += `        $${fieldId}_value = get_post_meta($post->ID, '${fieldId}', true);\n`;
-                    fieldsCode += `        if($${fieldId}_value === '') $${fieldId}_value = '${defaultValue}';\n`;
-                    fieldsCode += `        echo '<div style="margin-bottom: 15px;">';\n`;
-                    fieldsCode += `        echo '<label style="display:block;margin-bottom:5px;">';\n`;
-                    fieldsCode += `        echo '<input type="checkbox" name="${fieldId}" value="on" ' . checked($${fieldId}_value, 'on', false) . ' /> ${label} <small style="color:#666;font-size:0.8em;">(ID: ${fieldId})</small>';\n`;
-                    fieldsCode += `        echo '</label>';\n`;
+                if (blocks.length === 0) {
+                    alert("حداقل یک فیلد اضافه کنید.");
+                    return;
+                }
+
+                // ساخت یک متاباکس واحد با چندین فیلد
+                let fieldsCode = `    add_meta_box('${metaboxId}', '${metaboxTitle}', function($post){\n`;
+
+                if (type === 'checkbox') {
+                    // ساخت کد برای چک‌باکس‌ها
+                    fieldsCode += `        echo '<div class="nias-metabox-wrapper">';\n`;
+                    blocks.forEach((block, i) => {
+                        const fieldId = block.querySelector('.nias_checkbox_id').value.trim();
+                        const label = block.querySelector('.nias_checkbox_label').value.trim();
+                        const defaultValue = block.querySelector('.nias_checkbox_default').value;
+
+                        if (!fieldId || !label) {
+                            alert(`چک‌باکس شماره ${i+1} ناقص است.`);
+                            return;
+                        }
+
+                        fieldsCode += `        $${fieldId}_value = get_post_meta($post->ID, '${fieldId}', true);\n`;
+                        fieldsCode += `        if($${fieldId}_value === '') $${fieldId}_value = '${defaultValue}';\n`;
+                        fieldsCode += `        echo '<div style="margin-bottom: 15px;">';\n`;
+                        fieldsCode += `        echo '<label style="display:block;margin-bottom:5px;">';\n`;
+                        fieldsCode += `        echo '<input type="checkbox" name="${fieldId}" value="on" ' . checked($${fieldId}_value, 'on', false) . ' /> ${label} <small style="color:#666;font-size:0.8em;">(ID: ${fieldId})</small>';\n`;
+                        fieldsCode += `        echo '</label>';\n`;
+                        fieldsCode += `        echo '</div>';\n`;
+                    });
                     fieldsCode += `        echo '</div>';\n`;
-                });
-                fieldsCode += `        echo '</div>';\n`;
-            } else {
-                // ساخت کد برای فیلدهای متنی
-                blocks.forEach((block, i) => {
-                    const fieldId = block.querySelector('.nias_field_id').value.trim();
-                    const label = block.querySelector('.nias_field_label').value.trim();
+                } else {
+                    // ساخت کد برای فیلدهای متنی
+                    blocks.forEach((block, i) => {
+                        const fieldId = block.querySelector('.nias_field_id').value.trim();
+                        const label = block.querySelector('.nias_field_label').value.trim();
 
-                    if (!fieldId || !label) {
-                        alert(`فیلد شماره ${i+1} ناقص است.`);
-                        return;
-                    }
+                        if (!fieldId || !label) {
+                            alert(`فیلد شماره ${i+1} ناقص است.`);
+                            return;
+                        }
 
-                    fieldsCode += `        echo '<div style="margin-bottom: 15px;">';\n`;
-                    fieldsCode += `        echo '<label style="display:block;font-weight:bold;margin-bottom:5px;">${label} <small style="color:#666;font-weight:normal;font-size:0.8em;">(ID: ${fieldId})</small>:</label>';\n`;
-                    fieldsCode += `        echo '<input type="text" name="${fieldId}" value="'.get_post_meta($post->ID, '${fieldId}', true).'" style="width:100%;" />';\n`;
-                    fieldsCode += `        echo '</div>';\n`;
-                });
-            }
-            fieldsCode += `    }, '${postType}', 'normal', 'default');\n`;
+                        fieldsCode += `        echo '<div style="margin-bottom: 15px;">';\n`;
+                        fieldsCode += `        echo '<label style="display:block;font-weight:bold;margin-bottom:5px;">${label} <small style="color:#666;font-weight:normal;font-size:0.8em;">(ID: ${fieldId})</small>:</label>';\n`;
+                        fieldsCode += `        echo '<input type="text" name="${fieldId}" value="'.get_post_meta($post->ID, '${fieldId}', true).'" style="width:100%;" />';\n`;
+                        fieldsCode += `        echo '</div>';\n`;
+                    });
+                }
+                fieldsCode += `    }, '${postType}', 'normal', 'default');\n`;
 
-            // اضافه کردن فانکشن ذخیره متادیتا
-            let saveCode = `
+                // اضافه کردن فانکشن ذخیره متادیتا
+                let saveCode = `
 add_action('save_post', '${functionName}_save_meta');
 function ${functionName}_save_meta($post_id) {
     // اگر در حال ذخیره خودکار هستیم، کاری انجام نده
@@ -383,37 +480,38 @@ function ${functionName}_save_meta($post_id) {
     }
 `;
 
-            if (type === 'checkbox') {
-                blocks.forEach((block) => {
-                    const fieldId = block.querySelector('.nias_checkbox_id').value.trim();
-                    if (fieldId) {
-                        saveCode += `
+                if (type === 'checkbox') {
+                    blocks.forEach((block) => {
+                        const fieldId = block.querySelector('.nias_checkbox_id').value.trim();
+                        if (fieldId) {
+                            saveCode += `
     // ذخیره ${fieldId}
     update_post_meta($post_id, '${fieldId}', isset($_POST['${fieldId}']) ? 1 : 0);`;
-                    }
-                });
-            } else {
-                blocks.forEach((block) => {
-                    const fieldId = block.querySelector('.nias_field_id').value.trim();
-                    if (fieldId) {
-                        saveCode += `
+                        }
+                    });
+                } else {
+                    blocks.forEach((block) => {
+                        const fieldId = block.querySelector('.nias_field_id').value.trim();
+                        if (fieldId) {
+                            saveCode += `
     // ذخیره ${fieldId}
     if (isset($_POST['${fieldId}'])) {
         update_post_meta($post_id, '${fieldId}', sanitize_text_field($_POST['${fieldId}']));
     }`;
-                    }
-                });
-            }
-            
-            saveCode += `
+                        }
+                    });
+                }
+
+                saveCode += `
 }`;
 
-            const finalCode = `add_action('add_meta_boxes', '${functionName}');\nfunction ${functionName}() {\n${fieldsCode}}\n${saveCode}`;
+                const finalCode = `add_action('add_meta_boxes', '${functionName}');\nfunction ${functionName}() {\n${fieldsCode}}\n${saveCode}`;
 
-            document.getElementById('nias-generated-code').textContent = finalCode;
-            Prism.highlightAll();
-        }
+                document.getElementById('nias-generated-code').textContent = finalCode;
+                document.querySelector('.nias-code-output').classList.add('active');
+                Prism.highlightAll();
+            }
         </script>
-        <?php
-        return ob_get_clean();
-    }
+    <?php
+    return ob_get_clean();
+}
