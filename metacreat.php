@@ -165,6 +165,9 @@ function nias_metabox_form_shortcode()
         button.active svg path {
             stroke: white;
         }
+        div#nias-metabox-form select {
+    font-family: initial;
+}
     </style>
     <div id="nias-metabox-form">
 
@@ -188,24 +191,24 @@ function nias_metabox_form_shortcode()
         <div class="nias-tabs-container">
             <!-- تب فیلد متنی -->
             <div id="nias-tab-text" class="nias-tab active">
-                <label>نام فانکشن:</label><br>
-                <input type="text" id="nias_function_name_text"><br><br>
+                <label>نام فانکشن:</label>
+                <input type="text" id="nias_function_name_text"><br>
 
-                <label>نام متاباکس:</label><br>
-                <input type="text" id="nias_metabox_title_text"><br><br>
+                <label>نام متاباکس:</label>
+                <input type="text" id="nias_metabox_title_text"><br>
 
-                <label>آیدی متاباکس:</label><br>
-                <input type="text" id="nias_metabox_id_text"><br><br>
+                <label>آیدی متاباکس:</label>
+                <input type="text" id="nias_metabox_id_text"><br>
 
-                <label>محل نمایش:</label><br>
+                <label>محل نمایش:</label>
                 <select id="nias_post_type_target_text" onchange="niasTogglePostTypeField(this)">
                     <option value="product">محصول ووکامرس</option>
                     <option value="post">نوشته</option>
                     <option value="custom">پست تایپ اختصاصی</option>
-                </select><br><br>
+                </select><br>
                 <div id="nias_custom_post_type_field" style="display:none;">
-                    <label>آیدی پست تایپ:</label><br>
-                    <input type="text" id="nias_custom_post_type_text"><br><br>
+                    <label>آیدی پست تایپ:</label>
+                    <input type="text" id="nias_custom_post_type_text"><br>
                 </div>
 
                 <hr>
@@ -230,24 +233,24 @@ function nias_metabox_form_shortcode()
 
             <!-- تب چک‌باکس -->
             <div id="nias-tab-checkbox" class="nias-tab">
-                <label>نام فانکشن:</label><br>
-                <input type="text" id="nias_function_name_checkbox"><br><br>
+                <label>نام فانکشن:</label>
+                <input type="text" id="nias_function_name_checkbox"><br>
 
-                <label>نام متاباکس:</label><br>
-                <input type="text" id="nias_metabox_title_checkbox"><br><br>
+                <label>نام متاباکس:</label>
+                <input type="text" id="nias_metabox_title_checkbox"><br>
 
-                <label>آیدی متاباکس:</label><br>
-                <input type="text" id="nias_metabox_id_checkbox"><br><br>
+                <label>آیدی متاباکس:</label>
+                <input type="text" id="nias_metabox_id_checkbox"><br>
 
-                <label>محل نمایش:</label><br>
+                <label>محل نمایش:</label>
                 <select id="nias_post_type_target_checkbox" onchange="niasToggleCheckboxPostTypeField(this)">
                     <option value="product">محصول ووکامرس</option>
                     <option value="post">نوشته</option>
                     <option value="custom">پست تایپ اختصاصی</option>
-                </select><br><br>
+                </select><br>
                 <div id="nias_custom_post_type_field_checkbox" style="display:none;">
-                    <label>آیدی پست تایپ:</label><br>
-                    <input type="text" id="nias_custom_post_type_checkbox"><br><br>
+                    <label>آیدی پست تایپ:</label>
+                    <input type="text" id="nias_custom_post_type_checkbox"><br>
                 </div>
 
                 <hr>
