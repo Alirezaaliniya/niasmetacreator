@@ -6,7 +6,6 @@ function nias_metabox_form_shortcode()
 ?>
     <style>
         #nias-metabox-form {
-            max-width: 800px;
             margin: 20px auto;
             padding: 20px;
             background: #fff;

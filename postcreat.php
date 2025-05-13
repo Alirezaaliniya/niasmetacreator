@@ -8,22 +8,106 @@
 add_shortcode('nias_custom_posttype_form', 'nias_custom_posttype_form_shortcode');
 function nias_custom_posttype_form_shortcode() {
     ob_start(); ?>
+    <style>
+        #nias-metabox-form {
+            margin: 20px auto;
+            padding: 20px;
+            background: #fff;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            border-radius: 5px;
+        }
+
+        #nias-metabox-form label {
+            display: block;
+            margin: 15px 0 5px;
+            font-weight: bold;
+            color: #333;
+        }
+
+        #nias-metabox-form input[type="text"],
+        #nias-metabox-form select {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+
+        #nias-metabox-form input[type="checkbox"] {
+            margin-right: 8px;
+        }
+
+        #nias-metabox-form button {
+            background: #0073aa;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-top: 15px;
+        }
+
+        #nias-metabox-form button:hover {
+            background: #005177;
+        }
+
+        #nias-metabox-form .description {
+            color: #666;
+            font-size: 0.9em;
+            margin: 5px 0 15px;
+        }
+
+        #nias-metabox-form a {
+            color: #0073aa;
+            text-decoration: none;
+        }
+
+        #nias-metabox-form a:hover {
+            text-decoration: underline;
+        }
+
+        #nias-posttype-code {
+            background: #f5f5f5;
+            padding: 15px;
+            border-radius: 4px;
+            border: 1px solid #ddd;
+            font-family: monospace;
+            margin-top: 20px;
+        }
+    </style>
     <form id="nias-metabox-form">
-        <label>نام نمایشی (Label)</label>
+        <label>نام نمایشی</label>
         <input type="text" name="label">
 
-        <label>آیدی پست تایپ (Slug)</label>
+        <label>شناسه پست تایپ</label>
         <input type="text" name="slug">
 
         <label>آیکون منو</label>
-        <input type="text" name="menu_icon" id="menu_icon_input">
+        <textarea name="menu_icon" id="menu_icon_input" rows="5" style="width: 100%; margin-bottom: 10px;"></textarea>
+        
         <p class="description">
-            برای مشاهده لیست آیکن‌های موجود 
-            <a href="https://developer.wordpress.org/resource/dashicons/" target="_blank">اینجا کلیک کنید</a>
+            برای استفاده از SVG به عنوان آیکون منو، کد زیر را کپی و در فیلد بالا قرار دهید:
         </p>
+        <pre style="background: #f5f5f5; padding: 10px; border-radius: 4px; font-size: 12px; direction: ltr; margin: 10px 0;">data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyMCAyMCIgZmlsbD0iY3VycmVudENvbG9yIj48cGF0aCBkPSJNMTAgMmE4IDggMCAxMDAgMTZhOCA4IDAgMDAwLTE2em0wIDJhNiA2IDAgMTEwIDEyYTYgNiAwIDAxMC0xMnoiLz48L3N2Zz4=</pre>
+        
         <p class="description">
-            مثال: dashicons-admin-post
+            این مثال یک آیکون دایره‌ای ساده را نمایش می‌دهد. برای ساخت آیکون SVG سفارشی:
         </p>
+        <ol class="description" style="margin-left: 20px;">
+            <li>کد SVG خود را در یک ویرایشگر متن آماده کنید</li>
+            <li>کد را به base64 تبدیل کنید (می‌توانید از ابزارهای آنلاین استفاده کنید)</li>
+            <li>عبارت <code>data:image/svg+xml;base64,</code> را در ابتدای کد base64 شده قرار دهید</li>
+            <li>نتیجه نهایی را در فیلد بالا قرار دهید</li>
+        </ol>
+        
+        <p class="description">
+            نمونه کد SVG اصلی (قبل از تبدیل به base64):
+        </p>
+        <pre style="background: #f5f5f5; padding: 10px; border-radius: 4px; font-size: 12px; direction: ltr; margin: 10px 0;">
+&lt;svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"&gt;
+    &lt;path d="M10 2a8 8 0 100 16a8 8 0 000-16zm0 2a6 6 0 110 12a6 6 0 010-12z"/&gt;
+&lt;/svg&gt;</pre>
 
         <label>public؟</label>
         <select name="public">
@@ -42,19 +126,27 @@ function nias_custom_posttype_form_shortcode() {
 
         <label>قابلیت‌ها (Supports)</label><br>
         <?php
-        $supports = ['title','editor','thumbnail','excerpt','custom-fields','author','comments'];
-        foreach ($supports as $s) {
-            echo "<label><input type='checkbox' name='supports[]' value='$s'> $s</label><br>";
+        $supports = [
+            'title' => 'عنوان',
+            'editor' => 'ویرایشگر',
+            'thumbnail' => 'تصویر شاخص',
+            'excerpt' => 'خلاصه',
+            'custom-fields' => 'فیلدهای سفارشی',
+            'author' => 'نویسنده',
+            'comments' => 'دیدگاه‌ها'
+        ];
+        foreach ($supports as $key => $label) {
+            echo "<label><input type='checkbox' name='supports[]' value='$key'> $label</label><br>";
         }
         ?>
 
         <label><input type="checkbox" name="taxonomy_builtin[]" value="category">دسته‌بندی وردپرس</label><br>
         <label><input type="checkbox" name="taxonomy_builtin[]" value="post_tag">برچسب وردپرس</label><br>
 
-        <label>نام tax سفارشی</label>
+        <label>نام طبقه‌بندی سفارشی</label>
         <input type="text" name="custom_tax_name[]">
 
-        <label>اسلاگ tax سفارشی</label>
+        <label>شناسه طبقه‌بندی سفارشی</label>
         <input type="text" name="custom_tax_slug[]">
 
         <label>نقش‌های مجاز</label><br>
