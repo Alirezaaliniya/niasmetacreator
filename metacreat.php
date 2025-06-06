@@ -254,7 +254,7 @@ function nias_metabox_form_shortcode()
                 </div>
 
                 <hr>
-                <!-- ریپیتر فیلدهای چک‌باکس -->
+                <!-- ریپیتر فیلدهی چک‌باکس -->
                 <div id="nias-checkbox-fields-repeater">
                     <!-- ریپیتر بلاک‌های چک‌باکس اینجا اضافه میشن -->
                 </div>
@@ -441,13 +441,20 @@ function nias_metabox_form_shortcode()
                             return;
                         }
 
-                        fieldsCode += `        $${fieldId}_value = get_post_meta($post->ID, '${fieldId}', true);\n`;
-                        fieldsCode += `        if($${fieldId}_value === '') $${fieldId}_value = '${defaultValue}';\n`;
-                        fieldsCode += `        echo '<div style="margin-bottom: 15px;">';\n`;
-                        fieldsCode += `        echo '<label style="display:block;margin-bottom:5px;">';\n`;
-                        fieldsCode += `        echo '<input type="checkbox" name="${fieldId}" value="on" ' . checked($${fieldId}_value, 'on', false) . ' /> ${label} <small style="color:#666;font-size:0.8em;">(ID: ${fieldId})</small>';\n`;
-                        fieldsCode += `        echo '</label>';\n`;
-                        fieldsCode += `        echo '</div>';\n`;
+                        fieldsCode += `        $${fieldId}_value = get_post_meta($post->ID, '${fieldId}', true);
+`;
+                        fieldsCode += `        if($${fieldId}_value === '') $${fieldId}_value = '${defaultValue}';
+`;
+                        fieldsCode += `        echo '<div style="margin-bottom: 15px;">';
+`;
+                        fieldsCode += `        echo '<label style="display:block;margin-bottom:5px;">';
+`;
+                        fieldsCode += `        echo '<input type="checkbox" name="${fieldId}" value="on" ' . (($${fieldId}_value === 'on') ? 'checked="checked"' : '') . ' /> ${label} <small style="color:#666;font-size:0.8em;">(ID: ${fieldId})</small>';
+`;
+                        fieldsCode += `        echo '</label>';
+`;
+                        fieldsCode += `        echo '</div>';
+`;
                     });
                     fieldsCode += `        echo '</div>';\n`;
                 } else {
