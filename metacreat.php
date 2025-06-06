@@ -449,7 +449,7 @@ function nias_metabox_form_shortcode()
 `;
                         fieldsCode += `        echo '<label style="display:block;margin-bottom:5px;">';
 `;
-                        fieldsCode += `        echo '<input type="checkbox" name="${fieldId}" value="on" ' . (($${fieldId}_value === 'on') ? 'checked="checked"' : '') . ' /> ${label} <small style="color:#666;font-size:0.8em;">(ID: ${fieldId})</small>';
+                        fieldsCode += `        echo '<input type="checkbox" name="${fieldId}" value="on"' . ($${fieldId}_value === 'on' ? ' checked="checked"' : '') . ' /> ${label} <small style="color:#666;font-size:0.8em;">(ID: ${fieldId})</small>';
 `;
                         fieldsCode += `        echo '</label>';
 `;
