@@ -476,17 +476,13 @@ function nias_metabox_form_shortcode()
                 }
                 fieldsCode += `    }, '${postType}', 'normal', 'default');\n`;
 
-                // اضافه کردن فانکشن ذخیره متادیتا
+                // اضافه کردن کد ذخیره‌سازی
                 let saveCode = `
 add_action('save_post', '${functionName}_save_meta');
 function ${functionName}_save_meta($post_id) {
-    // اگر در حال ذخیره خودکار هستیم، کاری انجام نده
     if (defined('DOING_AUTOSAVE') && DOING_AUTOSAVE) return;
-    
-    // بررسی مجوزها
-    if (isset($_POST['post_type']) && '${postType}' == $_POST['post_type']) {
-        if (!current_user_can('edit_post', $post_id)) return;
-    }
+    if (!current_user_can('edit_post', $post_id)) return;
+
 `;
 
                 if (type === 'checkbox') {
@@ -495,7 +491,7 @@ function ${functionName}_save_meta($post_id) {
                         if (fieldId) {
                             saveCode += `
     // ذخیره ${fieldId}
-    update_post_meta($post_id, '${fieldId}', isset($_POST['${fieldId}']) ? 1 : 0);`;
+    update_post_meta($post_id, '${fieldId}', isset($_POST['${fieldId}']) ? 'on' : 'off');`;
                         }
                     });
                 } else {
